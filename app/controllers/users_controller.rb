@@ -3,8 +3,8 @@ class UsersController < ApplicationController
     before_action :authorize_request, only: [:show] 
     
     def index
-        @users = User.all
-        render json: {status: "SUCCESS",  message: "Users listing", data: @users}, status: :ok
+        users = User.select(select_params)
+        render json: {status: "SUCCESS",  message: "Users listing", data: users}, status: :ok
     end
 
     def register
@@ -44,7 +44,7 @@ class UsersController < ApplicationController
     end
 
     def show
-        @user = User.find_by_username(params[:username])
+        @user = User.select(select_params).find_by_username(params[:username])
         if @user
             render json: {status: "SUCCESS", message: "User data", data: @user}, status: :ok
         else
@@ -58,13 +58,18 @@ class UsersController < ApplicationController
         params.permit(:username, :name, :email, :password, :password_confirmation)
     end
 
-
     # Paramters for user login
     # identity: allows username or email
     def login_params
         params.permit(:identity, :password)
     end
 
+    #define attributes to be selected
+    def select_params
+        [:id, :username, :name, :email]
+    end
+
+    #get formatted error from validation errors
     def get_errors(model)
         errors = {}
         model.errors.each do |attr, full_messages|
