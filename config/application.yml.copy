@@ -1,0 +1,16 @@
+DB_HOST: 
+DB_NAME: 
+DB_USERNAME: 
+DB_PASSWORD: 
+
+production:
+  DB_HOST: 
+  DB_NAME: 
+  DB_USERNAME: 
+  DB_PASSWORD: 
+
+test:
+  DB_HOST: 
+  DB_NAME:
+  DB_USERNAME: 
+  DB_PASSWORD: 
