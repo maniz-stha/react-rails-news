@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_28_063019) do
+ActiveRecord::Schema.define(version: 2019_08_28_153609) do
+
+  create_table "news", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.text "title"
+    t.text "link"
+    t.string "source"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_news_on_user_id"
+  end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "username"
@@ -21,4 +31,5 @@ ActiveRecord::Schema.define(version: 2019_08_28_063019) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "news", "users"
 end
