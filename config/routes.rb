@@ -1,14 +1,15 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  root 'news#index'
+  namespace :api do
+    root 'news#index'
 
-  # user routes
-  resources :users, param: :username
-  post '/users/register', to: 'users#register'
-  post '/users/login', to: 'users#login'
+    # user routes
+    resources :users, param: :username
+    post '/users/register', to: 'users#register'
+    post '/users/login', to: 'users#login'
 
-  #news routes
-  resources :news, except: [:new, :edit]
-  get '/feeds', to: 'news#index'
-  
+    #news routes
+    resources :news, except: [:new, :edit]
+    get '/feeds', to: 'news#index'
+  end
 end
