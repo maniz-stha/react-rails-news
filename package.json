@@ -1,5 +1,10 @@
 {
   "name": "react-rails-news",
+  "version": "1.0.0",
+  "description": "News listing app with react and rails",
+  "scripts": {
+    "frontend-start": "npm start --prefix app/frontend"
+  },
   "private": true,
   "dependencies": {}
 }
