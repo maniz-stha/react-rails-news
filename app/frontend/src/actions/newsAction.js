@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { GET_ERRORS, ADD_NEWS } from './types';
+import { GET_ERRORS } from './types';
 import { SET_NEWS_LIST } from './types';
 
 export const getNewsList = () => dispatch => {
