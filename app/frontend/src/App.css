@@ -1,3 +1,12 @@
 nav {
   background-color: #e3f2fd;
 }
+
+a.news-action {
+  color: #777777;
+}
+
+a.news-action:hover,
+a.news-action.liked {
+  color: #007bff;
+}
