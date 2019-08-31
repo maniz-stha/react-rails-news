@@ -1,4 +1,4 @@
-import { SET_NEWS_LIST, ADD_NEWS } from "../actions/types";
+import { SET_NEWS_LIST, ADD_NEWS, DELETE_NEWS } from "../actions/types";
 const initialState = {
     newsList: null,
     news: null
@@ -16,6 +16,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 newsList: [action.payload, ...state.news.newsList]
+            }
+        case DELETE_NEWS:
+            return {
+                ...state,
+                newsList: state.newsList.filter(news => news.id !== action.payload)
             }
         //return the initial state on default case
         default:

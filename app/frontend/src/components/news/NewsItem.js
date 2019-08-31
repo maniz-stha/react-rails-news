@@ -4,6 +4,8 @@ import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { deleteNews } from '../../actions/newsAction';
+
 class NewsItem extends Component {
 
     onLikeClick() {
@@ -11,9 +13,10 @@ class NewsItem extends Component {
         alert('liked');
     }
 
-    onDeleteClick() {
-        //TODO: delete news
-        alert('delete');
+    onDeleteClick(id) {
+        if (window.confirm('Are you sure you want to delete the news item')) {
+            this.props.deleteNews(id);
+        }
     }
 
     render() {
@@ -54,11 +57,12 @@ class NewsItem extends Component {
 
 NewsItem.propTypes = {
     news: PropTypes.object.isRequired,
-    auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired,
+    deleteNews: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
     auth: state.auth
 });
 
-export default connect(mapStateToProps)(NewsItem);
+export default connect(mapStateToProps, {deleteNews})(NewsItem);
