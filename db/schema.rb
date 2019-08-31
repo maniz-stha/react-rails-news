@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_28_153609) do
+ActiveRecord::Schema.define(version: 2019_08_31_143851) do
+
+  create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.bigint "news_id"
+    t.bigint "user_id"
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["news_id"], name: "index_comments_on_news_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
 
   create_table "news", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.text "title"
@@ -31,5 +41,7 @@ ActiveRecord::Schema.define(version: 2019_08_28_153609) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "comments", "news"
+  add_foreign_key "comments", "users"
   add_foreign_key "news", "users"
 end

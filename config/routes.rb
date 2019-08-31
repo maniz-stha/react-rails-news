@@ -9,7 +9,9 @@ Rails.application.routes.draw do
     post '/users/login', to: 'users#login'
 
     #news routes
-    resources :news, except: [:new, :edit]
-    get '/feeds', to: 'news#index'
+    resources :news, except: [:new, :edit] do
+      #nested comments routes
+      resources :comments
+    end
   end
 end
