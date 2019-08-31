@@ -25,15 +25,19 @@ class Api::UsersController < ApplicationController
     def login
         # render json: login_params.inspect
         params = login_params
+        if !check_login_params.empty?
+            render json: check_login_params, status: :bad_request
+            return
+        end
         user = User.find_by("email = ? OR username = ?", params[:identity].downcase, params[:identity])
         if user
             # user found, authenticate
             if user.authenticate(params[:password])
                 #set expiry to 2 hours
                 time = Time.now + 2.hours.to_i
-                token = JsonWebToken.encode({user_id: user.id}, time)
-                user_data = {id: user.id, username: user.username, name: user.name, email: user.email, token: token, exp: time.strftime("%m-%d-%Y %H:%M")}
-                render json: {status: "SUCCESS", message: "User logged in", data: user_data}, status: :ok
+                user_data = {id: user.id, username: user.username, name: user.name, email: user.email}
+                token = JsonWebToken.encode(user_data, time)
+                render json: {status: "SUCCESS", message: "User logged in", token: token}, status: :ok
             else
                 render json: {password: "Incorrect password"}, status: :bad_request
             end
@@ -77,5 +81,16 @@ class Api::UsersController < ApplicationController
           errors[attr] = model.errors.full_message(attr, message)
         end
         render status: :bad_request, json: errors
+    end
+
+    def check_login_params
+        errors = {}
+        if params[:identity] == ""
+            errors[:identity] = "Enter username or email address."
+        end
+        if params[:password] == "" 
+            errors[:password] = "Enter password."
+        end
+        return errors
     end
 end

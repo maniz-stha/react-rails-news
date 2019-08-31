@@ -18,6 +18,12 @@ class Login extends Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
+    componentDidMount() {
+        if (this.props.auth.isAuthenticated) {
+            this.props.history.push('/feeds');
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         // redirect to feeds page when logged in
         if (nextProps.auth.isAuthenticated) {
@@ -65,11 +71,12 @@ class Login extends Component {
                             placeholder="Password"
                             name="password"
                             id="password"
+                            label="Password"
                             value={this.state.password}
                             onChange={this.onChange}
                             error={errors.password}
                         />
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" className="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </div>

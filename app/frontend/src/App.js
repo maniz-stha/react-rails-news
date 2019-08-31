@@ -14,13 +14,13 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 
 //check for auth tokens
-if (localStorage.jwtToken && localStorage.userData) {
+if (localStorage.jwtToken) {
   //set authorization token in request header
   setAuthToken(localStorage.jwtToken);
   //decode jwt token
   const decoded = jwt_decode(localStorage.jwtToken);
   //set user and isAuthenticated
-  store.dispatch(setCurrentUser(localStorage.userData));
+  store.dispatch(setCurrentUser(decoded));
   //check for expired tokens
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
