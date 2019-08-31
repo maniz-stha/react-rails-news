@@ -69,14 +69,4 @@ class Api::NewsController < ApplicationController
         params.permit(:title, :link, :source)
     end
 
-
-    #get formatted error from validation errors
-    def get_errors(model)
-        errors = {}
-        model.errors.each do |attr, full_messages|
-          message = model.errors[attr][0]
-          errors[attr] = model.errors.full_message(attr, message)
-        end
-        render status: :bad_request, json: errors
-    end
 end
