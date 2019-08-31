@@ -1,4 +1,4 @@
-import { SET_NEWS_LIST, ADD_NEWS, DELETE_NEWS } from "../actions/types";
+import { SET_NEWS_LIST, SET_NEWS, ADD_NEWS, DELETE_NEWS } from "../actions/types";
 const initialState = {
     newsList: null,
     news: null
@@ -6,17 +6,25 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        //set auth state with current user data
+        //set newslist state with list of news
         case SET_NEWS_LIST:
             return {
                 ...state,
                 newsList: action.payload
             }
+        //set single news item
+        case SET_NEWS:
+            return {
+                ...state,
+                news: action.payload
+            }
+        // add news
         case ADD_NEWS:
             return {
                 ...state,
                 newsList: [action.payload, ...state.news.newsList]
             }
+        //delete news
         case DELETE_NEWS:
             return {
                 ...state,

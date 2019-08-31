@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 
 import NewsForm from './NewsForm';
 
-class AddNews extends Component {
+class EditNews extends Component {
     render() {
         return (
-            <div className="add-news row">
+            <div className="edit-news row">
                 <div className="col-md-8 m-auto">
-                    <h2 className="text-center">Add News</h2>
-                    <NewsForm />
+                    <h2 className="text-center">Edit News</h2>
+                    <NewsForm action="edit" />
                 </div>
             </div>
         )
     }
 }
 
-export default AddNews;
+export default EditNews;

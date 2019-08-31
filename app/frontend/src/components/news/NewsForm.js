@@ -5,18 +5,19 @@ import { withRouter } from 'react-router-dom';
 
 import TextFieldGroup from '../common/TextFieldGroup';
 import HiddenInput from '../common/HiddenInput';
-import { addNews } from '../../actions/newsAction';
+import { addNews, editNews, getNews } from '../../actions/newsAction';
+import isEmpty from '../../validatons/isEmpty';
 
 class NewsForm extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
         this.state = {
             user_id: props.user.id,
             title: '',
             link: '',
             source: '',
-            errors: {}
+            errors: {},
+            buttonTxt: 'Add news'
         };
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -28,18 +29,47 @@ class NewsForm extends Component {
 
     onSubmit(event) {
         event.preventDefault();
-        const newNews = {
+        const newsData = {
             user_id: this.state.user_id,
             title: this.state.title,
             source: this.state.source,
             link: this.state.link
         };
-        this.props.addNews(newNews, this.props.history);
+        // handle route based on the action prop of component
+        if (this.props.action === 'edit') {
+            const newsId = this.props.match.params.id;
+            this.props.editNews(newsId, newsData, this.props.history);
+        } else {
+            this.props.addNews(newsData, this.props.history);
+        }
+    }
+
+    componentDidMount() {
+        //get news if edit action
+        if (this.props.action === 'edit') {
+            const newsId = this.props.match.params.id;
+            this.props.getNews(newsId);
+        }
     }
     
     componentWillReceiveProps(nextProps) {
         if (nextProps.errors) {
             this.setState({ errors: nextProps.errors });
+        }
+        if (nextProps.news) {
+            // in case of edit news, get news from props and add to state
+            const news = nextProps.news;
+            news.user_id = !isEmpty(news.user_id) ? news.user_id : '';
+            news.title = !isEmpty(news.title) ? news.title : '';
+            news.link = !isEmpty(news.link) ? news.link : '';
+            news.source = !isEmpty(news.source) ? news.source : '';
+            this.setState({
+                user_id: news.user_id,
+                title: news.title,
+                source: news.source,
+                link: news.link, 
+                buttonTxt: 'Edit news'
+            });
         }
     }
 
@@ -84,7 +114,7 @@ class NewsForm extends Component {
                         error={errors.source}
                         label="Source"
                     />
-                    <button type="submit" className="btn btn-primary btn-lg">Add news</button>
+                    <button type="submit" className="btn btn-primary btn-lg">{ this.state.buttonTxt }</button>
                 </form>
             </div>
         )
@@ -93,12 +123,21 @@ class NewsForm extends Component {
 
 NewsForm.propTypes = {
     addNews: PropTypes.func.isRequired,
+    editNews: PropTypes.func.isRequired,
+    getNews: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
     errors: state.errors,
-    user: state.auth.user
+    user: state.auth.user,
+    news: state.news.news
 });
-export default connect(mapStateToProps, {addNews})(withRouter(NewsForm));
+
+//set default action to 'add' news
+NewsForm.defaultProps = {
+    action: 'add'
+};
+
+export default connect(mapStateToProps, {addNews, editNews, getNews})(withRouter(NewsForm));

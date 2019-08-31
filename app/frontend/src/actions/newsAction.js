@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 import { GET_ERRORS, DELETE_NEWS } from './types';
-import { SET_NEWS_LIST } from './types';
+import { SET_NEWS_LIST, SET_NEWS } from './types';
 
+//get all news list
 export const getNewsList = () => dispatch => {
     axios.get('/api/news/')
         .then(res => { 
@@ -20,6 +21,7 @@ export const getNewsList = () => dispatch => {
          });
 };
 
+// create news
 export const addNews = (newsData, history) => dispatch => {
     axios.post('/api/news', newsData)
         .then(
@@ -33,6 +35,39 @@ export const addNews = (newsData, history) => dispatch => {
         );
 }
 
+//get specific news by id
+export const getNews = id => dispatch => {
+    axios.get(`/api/news/${id}`)
+        .then(res => { 
+            const news = res.data;
+            dispatch({
+                type: SET_NEWS,
+                payload: news.data
+            });
+        })
+        .catch(err => {
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            });
+         });
+};
+
+//edit news
+export const editNews = (id, newsData, history) => dispatch => {
+    axios.put(`/api/news/${id}`, newsData)
+        .then(
+            res => history.push('/feeds')
+        )
+        .catch(
+            err => dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        );
+}
+
+// delete news
 export const deleteNews = id => dispatch => {
     axios.delete(`/api/news/${id}`)
         .then(res =>

@@ -15,6 +15,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Feeds from './components/news/Feeds';
 import AddNews from './components/news/AddNews';
+import EditNews from './components/news/EditNews';
 
 //check for auth tokens
 if (localStorage.jwtToken) {
@@ -46,6 +47,9 @@ function App() {
             <Route exact path="/register" component={Register} />
             <Switch>
               <PrivateRoute exact path="/news/create" component={AddNews}/>
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/news/edit/:id" component={EditNews}/>
             </Switch>
           </div>
           <Footer/>

@@ -25,7 +25,7 @@ const HiddenInput = ({
 
 HiddenInput.propTypes = {
     name: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
     error: PropTypes.string,
     onChange: PropTypes.func.isRequired
 };
