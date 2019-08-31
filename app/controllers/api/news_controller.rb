@@ -9,12 +9,16 @@ class Api::NewsController < ApplicationController
         page_size = params[:page_size] ? params[:page_size].to_i : Page_size
         page = params[:page] ? params[:page].to_i : 1
         offset = page_size*(page - 1)
-        @news = News.limit(page_size).offset(offset).order('created_at desc')
+        @news = News.limit(page_size).offset(offset).order('created_at desc').includes(:user, :comments)
 
         if @news.blank?
             render json: {status: "FEED_EMPTY", message: "No news feeds", data: {}}, status: :ok
         else
-            render json: {status: "SUCCESS", message: "List of news feeds", data: @news}, status: :ok
+            news_data = []
+            @news.each_with_index do |news, index|
+                news_data << {news: news, comments: news.comments.count, user: news.user.username}
+            end
+            render json: {status: "SUCCESS", message: "List of news feeds", data: news_data}, status: :ok
         end
     end
 
@@ -23,7 +27,8 @@ class Api::NewsController < ApplicationController
         if @news.blank?
             render json: {errors: "News item not found."}, status: :not_found
         else
-            render json: {status: "SUCCESS", message: "News data for edit", data: @news}, status: :ok
+            news_data = {news: @news, comments: @news.comments, user: @news.user}
+            render json: {status: "SUCCESS", message: "News data for edit", data: news_data}, status: :ok
         end
     end
 

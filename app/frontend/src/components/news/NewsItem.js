@@ -24,17 +24,22 @@ class NewsItem extends Component {
         return (
             <div className="card card-body bg-light mb-3">
                 <div className="news-title">
-                    <a className="news-link" href={news.link} target="_blank">{news.title}</a>
+                    <a className="news-link" href={news.link} target="_blank" rel="noopener noreferrer">{news.title}</a>
                     <span className="news-source ml-3">({news.source})</span>
                 </div>
                 <div className="news-info">
                     <a href="#" className="news-like news-action" onClick={this.onLikeClick.bind(this)}>
                         <i className="fas fa-thumbs-up" />
-                        <span className="badge badge-light">1</span>
+                        <span className="badge badge-dark ml-2">1</span>
                     </a>
-                    <Link to={`/news/${news.id}`} className="news-comment news-action mx-5">Comment</Link>
+                    <Link to={`/news/${news.id}`} className="news-comment news-action mx-5">
+                        Comment
+                        {news.comments > 0 ? (
+                            <span className="badge badge-dark ml-2">{news.comments}</span>
+                        ) : null}
+                    </Link>
                     <span className="news-poster mr-3">
-                        Posted by user ({news.user_id}) <Moment fromNow>{news.updated_at}</Moment>
+                        Posted by ({news.user}) <Moment fromNow>{news.updated_at}</Moment>
                     </span>
                     {
                         // if posted by same user, allow edit and delete

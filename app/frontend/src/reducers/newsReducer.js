@@ -8,15 +8,22 @@ export default function (state = initialState, action) {
     switch (action.type) {
         //set newslist state with list of news
         case SET_NEWS_LIST:
+            let newsList = action.payload;
+            const listItem = newsList.map(news => {
+                const item = { ...news.news, comments: news.comments, user: news.user };
+                return item;
+            });
             return {
                 ...state,
-                newsList: action.payload
+                newsList: listItem
             }
         //set single news item
         case SET_NEWS:
+            const news = action.payload;
+            const newsItem = { ...news.news, comments: news.comments, user: news.user };
             return {
                 ...state,
-                news: action.payload
+                news: newsItem
             }
         // add news
         case ADD_NEWS:
