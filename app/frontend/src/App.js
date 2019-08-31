@@ -12,6 +12,7 @@ import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
+import Feeds from './components/news/Feeds';
 
 //check for auth tokens
 if (localStorage.jwtToken) {
@@ -38,6 +39,7 @@ function App() {
         <div className="App">
           <Header />
           <div className="container page-wrapper">
+            <Route exact path="/(|feeds)/" component={Feeds} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
           </div>
