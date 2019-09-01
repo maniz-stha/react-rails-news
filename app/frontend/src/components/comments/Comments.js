@@ -13,7 +13,7 @@ class Comments extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '',
+            news_id: '',
             user_id: '',
             title: '',
             link: '',
@@ -41,7 +41,7 @@ class Comments extends Component {
         }
         if (nextProps.news) {
             this.setState({
-                id: news.id,
+                news_id: news.id,
                 user_id: user.id,
                 title: news.title,
                 link: news.link,
@@ -62,10 +62,11 @@ class Comments extends Component {
         event.preventDefault();
         const commentData = {
             user_id: this.state.user_id,
-            news_id: this.state.id,
+            news_id: this.state.news_id,
             comment: this.state.comment
         };
         this.props.addComment(commentData);
+        this.state.comment = '';
     }
 
     onLikeClick() {
@@ -111,7 +112,7 @@ class Comments extends Component {
                     <form onSubmit={this.onSubmit}>
                         <HiddenInput
                             name="news_id"
-                            value={this.state.id}
+                            value={this.state.news_id}
                             onChange={this.onChange}
                             error={errors.news_id}
                         />  
@@ -141,7 +142,7 @@ class Comments extends Component {
 
 Comments.propTypes = {
     user: PropTypes.object.isRequired,
-    news: PropTypes.object.isRequired,
+    news: PropTypes.object,
     errors: PropTypes.object.isRequired,
     getNews: PropTypes.func.isRequired,
     addComment: PropTypes.func.isRequired

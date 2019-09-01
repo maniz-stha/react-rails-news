@@ -16,7 +16,7 @@ export default function (state = initialState, action) {
             }
         //set single news item
         case SET_NEWS:
-            const news = action.payload;
+           const news = action.payload;
             const newsItem = { ...news.news, comments: news.comments, user: news.user };
             return {
                 ...state,
@@ -35,19 +35,19 @@ export default function (state = initialState, action) {
                 newsList: state.newsList.filter(news => news.id !== action.payload)
             }
         case SET_COMMENT:
-            let comments = [action.payload, ...state.news.news.comments];
-            news['news']['comments'] = comments;
+            let updatedComments = [...state.news.comments, action.payload];
+            const currentNewsItem = { ...state.news, comments: updatedComments, user: state.news.user}
             return {
                 ...state,
-                news
+                news: currentNewsItem
             }
         //delete comment
         case DELETE_COMMENT:
-            comments = state.news.comments.filter(comment => comment.id !== action.payload)
-            news['comments'] = comments
+            let comments = state.news.comments.filter(comment => comment.id !== action.payload)
+            const updatedNewsItem = { ...state.news, comments: comments, user: state.news.user}
             return {
                 ...state,
-                news
+                news: updatedNewsItem
             }
         //return the initial state on default case
         default:
