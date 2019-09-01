@@ -16,7 +16,7 @@ class Api::NewsController < ApplicationController
         else
             news_data = []
             @news.each_with_index do |news, index|
-                news_data << {news: news, comments: news.comments.count, user: news.user.username}
+                news_data << {news: news, comments: news.comments.count, likes: news.likes.count, user: news.user.username}
             end
             render json: {status: "SUCCESS", message: "List of news feeds", data: news_data}, status: :ok
         end
@@ -27,7 +27,7 @@ class Api::NewsController < ApplicationController
         if @news.blank?
             render json: {errors: "News item not found."}, status: :not_found
         else
-            news_data = {news: @news, comments: @news.comments, user: @news.user}
+            news_data = {news: @news, comments: @news.comments, likes: @news.likes.count, user: @news.user}
             render json: {status: "SUCCESS", message: "News data for edit", data: news_data}, status: :ok
         end
     end
