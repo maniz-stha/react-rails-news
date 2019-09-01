@@ -3,14 +3,29 @@ import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
 import { deleteNews } from '../../actions/newsAction';
+import { addLike, removeLike } from '../../actions/likeAction';
 
 class NewsItem extends Component {
 
-    onLikeClick() {
-        //TODO: like on news
-        alert('liked');
+    // like or dislike news when like button is clicked
+    onLikeClick(newsId, userId, isNewsLiked, likeId) {
+        if (!isNewsLiked) {
+            this.props.addLike(newsId, userId);
+        } else {
+            this.props.removeLike(newsId, likeId);
+        }
+    }
+
+    //check if current user liked the news
+    findUserLike(likes) {
+        const { auth } = this.props;
+        if (Object.values(likes).includes(auth.user.id)) {
+            return true;
+        }
+        return false
     }
 
     onDeleteClick(id) {
@@ -21,6 +36,11 @@ class NewsItem extends Component {
 
     render() {
         const { news, auth } = this.props;
+        const isNewsLiked = this.findUserLike(news.likes);
+        let likeId = 0;
+        if (isNewsLiked) {
+            likeId = Object.keys(news.likes).find(key => news.likes[key] == auth.user.id);
+        }
         return (
             <div className="card card-body bg-light mb-3">
                 <div className="news-title">
@@ -28,10 +48,12 @@ class NewsItem extends Component {
                     <span className="news-source ml-3">({news.source})</span>
                 </div>
                 <div className="news-info">
-                    <a href="#" className="news-like news-action" onClick={this.onLikeClick.bind(this)}>
-                        <i className="fas fa-thumbs-up" />
-                        { news.likes.length > 0 ? (
-                            <span className="badge badge-dark ml-2">{news.likes.length}</span>
+                    <a href="#" className="news-like news-action" onClick={this.onLikeClick.bind(this, news.id, auth.user.id, isNewsLiked, likeId)}>
+                        <i className={classnames('fas fa-thumbs-up', {
+                            'text-info': isNewsLiked
+                        })} />
+                        { Object.keys(news.likes).length > 0 ? (
+                            <span className="badge badge-dark ml-2">{Object.keys(news.likes).length}</span>
                         ) : null}
                     </a>
                     <Link to={`/news/${news.id}/comments`} className="news-comment news-action mx-5">
@@ -65,11 +87,13 @@ class NewsItem extends Component {
 NewsItem.propTypes = {
     news: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    deleteNews: PropTypes.func.isRequired
+    deleteNews: PropTypes.func.isRequired,
+    addLike: PropTypes.func.isRequired,
+    removeLike: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
     auth: state.auth
 });
 
-export default connect(mapStateToProps, {deleteNews})(NewsItem);
+export default connect(mapStateToProps, {deleteNews, addLike, removeLike})(NewsItem);

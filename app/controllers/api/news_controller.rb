@@ -6,6 +6,7 @@ class Api::NewsController < ApplicationController
     
     # get all news to be displayed on the feeds
     def index
+        #pagination parameters
         page_size = params[:page_size] ? params[:page_size].to_i : Page_size
         page = params[:page] ? params[:page].to_i : 1
         offset = page_size*(page - 1)
@@ -15,7 +16,8 @@ class Api::NewsController < ApplicationController
             render json: {status: "FEED_EMPTY", message: "No news feeds", data: {}}, status: :ok
         else
             news_data = []
-            @news.each_with_index do |news, index|
+            # format likes, comments and user for each news
+            @news.each do |news|
                 news_data << {news: news, comments: news.comments.count, likes: liked_user_id(news), user: news.user.username}
             end
             render json: {status: "SUCCESS", message: "List of news feeds", data: news_data}, status: :ok
@@ -81,9 +83,9 @@ class Api::NewsController < ApplicationController
 
     #returns id of all user that liked the news
     def liked_user_id(news)
-        user_ids = []
+        user_ids = {}
         news.likes.each do |like|
-            user_ids << like.user_id
+            user_ids[like.id] = like.user_id
         end
         return user_ids
     end

@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
 import { getNews } from '../../actions/newsAction';
 import { addComment } from '../../actions/commentAction';
+import { addLike, removeLike } from '../../actions/likeAction';
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup';
 import HiddenInput from '../common/HiddenInput';
 import CommentItem from './CommentItem';
@@ -69,17 +71,36 @@ class Comments extends Component {
         this.state.comment = '';
     }
 
-    onLikeClick() {
-        console.log('liked')
+    // like or dislike the news when like button is clicked
+    onLikeClick(newsId, userId, isNewsLiked, likeId) {
+        if (!isNewsLiked) {
+            this.props.addLike(newsId, userId, 'show');
+        } else {
+            this.props.removeLike(newsId, likeId, 'show');
+        }
+    }
+
+    // find if the current user liked the news
+    findUserLike(likes) {
+        const { user } = this.props;
+        if (likes && Object.values(likes).includes(user.id)) {
+            return true;
+        }
+        return false
     }
 
     render() {
-        const { errors } = this.props;
+        const { errors, user } = this.props;
         const comments = this.state.comments;
+        const isNewsLiked = this.findUserLike(this.state.news.likes);
+        let likeId = 0;
+        if (isNewsLiked) {
+            likeId = Object.keys(this.state.news.likes).find(key => this.state.news.likes[key] == user.id);
+        }
         let commentsList;
         if (comments && comments.length > 0) {
             commentsList = comments.map(item => (
-                <CommentItem key={item.id} comment={item} currentUserId={this.props.user.id}/>
+                <CommentItem key={item.id} comment={item} currentUserId={user.id}/>
             ));
         } else {
             commentsList = (
@@ -93,10 +114,12 @@ class Comments extends Component {
                     <span className="news-source ml-3">({this.state.source})</span>
                 </div>
                 <div className="news-info">
-                    <a href="#" className="news-like news-action" onClick={this.onLikeClick.bind(this)}>
-                        <i className="fas fa-thumbs-up" />
-                        { this.state.news.likes > 0 ? (
-                            <span className="badge badge-dark ml-2">{this.state.news.likes}</span>
+                    <a href="#" className="news-like news-action" onClick={this.onLikeClick.bind(this, this.state.news_id, this.state.user_id, isNewsLiked, likeId)}>
+                        <i className={classnames('fas fa-thumbs-up', {
+                            'text-info': isNewsLiked
+                        })} />
+                        { (this.state.news.likes && Object.values(this.state.news.likes).length > 0) ? (
+                            <span className="badge badge-dark ml-2">{Object.values(this.state.news.likes).length}</span>
                         ) : null}
                     </a>
                     <span className="news-comment news-action mx-5">
@@ -147,7 +170,9 @@ Comments.propTypes = {
     news: PropTypes.object,
     errors: PropTypes.object.isRequired,
     getNews: PropTypes.func.isRequired,
-    addComment: PropTypes.func.isRequired
+    addComment: PropTypes.func.isRequired,
+    addLike: PropTypes.func.isRequired,
+    removeLike: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -156,4 +181,4 @@ const mapStateToProps = state => ({
     errors: state.errors
 });
 
-export default connect(mapStateToProps, {getNews, addComment})(Comments);
+export default connect(mapStateToProps, {getNews, addComment, addLike, removeLike})(Comments);
