@@ -16,6 +16,7 @@ import Register from './components/auth/Register';
 import Feeds from './components/news/Feeds';
 import AddNews from './components/news/AddNews';
 import EditNews from './components/news/EditNews';
+import Comments from './components/comments/Comments';
 
 //check for auth tokens
 if (localStorage.jwtToken) {
@@ -49,7 +50,10 @@ function App() {
               <PrivateRoute exact path="/news/create" component={AddNews}/>
             </Switch>
             <Switch>
-              <PrivateRoute exact path="/news/edit/:id" component={EditNews}/>
+              <PrivateRoute exact path="/news/:id/edit" component={EditNews}/>
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/news/:id/comments" component={Comments}/>
             </Switch>
           </div>
           <Footer/>

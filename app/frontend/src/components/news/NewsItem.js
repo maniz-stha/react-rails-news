@@ -32,7 +32,7 @@ class NewsItem extends Component {
                         <i className="fas fa-thumbs-up" />
                         <span className="badge badge-dark ml-2">1</span>
                     </a>
-                    <Link to={`/news/${news.id}`} className="news-comment news-action mx-5">
+                    <Link to={`/news/${news.id}/comments`} className="news-comment news-action mx-5">
                         Comment
                         {news.comments > 0 ? (
                             <span className="badge badge-dark ml-2">{news.comments}</span>
@@ -45,7 +45,7 @@ class NewsItem extends Component {
                         // if posted by same user, allow edit and delete
                         news.user_id === auth.user.id ? (
                             <span className="actions float-right">
-                                <Link className="news-edit news-action mr-2" to={`/news/edit/${news.id}`}>
+                                <Link className="news-edit news-action mr-2" to={`/news/${news.id}/edit`}>
                                     <i className="fas fa-edit" />
                                 </Link>
                                 <a href="#" onClick={this.onDeleteClick.bind(this, news.id)} className="news-delete news-action">
