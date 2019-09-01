@@ -5,3 +5,5 @@ export const SET_NEWS_LIST = 'SET_NEWS_LIST';
 export const SET_NEWS = 'SET_NEWS';
 export const ADD_NEWS = 'ADD_NEWS';
 export const DELETE_NEWS = 'DELETE_NEWS';
+export const SET_COMMENT = 'SET_COMMENT';
+export const DELETE_COMMENT = 'DELETE_COMMENT';

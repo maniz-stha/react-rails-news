@@ -6,15 +6,21 @@ class Api::NewsController < ApplicationController
     
     # get all news to be displayed on the feeds
     def index
+        #pagination parameters
         page_size = params[:page_size] ? params[:page_size].to_i : Page_size
         page = params[:page] ? params[:page].to_i : 1
         offset = page_size*(page - 1)
-        @news = News.limit(page_size).offset(offset).order('created_at desc')
+        @news = News.limit(page_size).offset(offset).order('created_at desc').includes(:user, :comments)
 
         if @news.blank?
             render json: {status: "FEED_EMPTY", message: "No news feeds", data: {}}, status: :ok
         else
-            render json: {status: "SUCCESS", message: "List of news feeds", data: @news}, status: :ok
+            news_data = []
+            # format likes, comments and user for each news
+            @news.each do |news|
+                news_data << {news: news, comments: news.comments.count, likes: liked_user_id(news), user: news.user.username}
+            end
+            render json: {status: "SUCCESS", message: "List of news feeds", data: news_data}, status: :ok
         end
     end
 
@@ -23,7 +29,13 @@ class Api::NewsController < ApplicationController
         if @news.blank?
             render json: {errors: "News item not found."}, status: :not_found
         else
-            render json: {status: "SUCCESS", message: "News data for edit", data: @news}, status: :ok
+            news_data = {
+                news: @news, 
+                comments: @news.comments.as_json(:include => {user: {only: [:username]}}), 
+                likes: liked_user_id(@news), 
+                user: @news.user
+            }
+            render json: {status: "SUCCESS", message: "News data for edit", data: news_data}, status: :ok
         end
     end
 
@@ -69,14 +81,12 @@ class Api::NewsController < ApplicationController
         params.permit(:title, :link, :source)
     end
 
-
-    #get formatted error from validation errors
-    def get_errors(model)
-        errors = {}
-        model.errors.each do |attr, full_messages|
-          message = model.errors[attr][0]
-          errors[attr] = model.errors.full_message(attr, message)
+    #returns id of all user that liked the news
+    def liked_user_id(news)
+        user_ids = {}
+        news.likes.each do |like|
+            user_ids[like.id] = like.user_id
         end
-        render status: :bad_request, json: errors
+        return user_ids
     end
 end
