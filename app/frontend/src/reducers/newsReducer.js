@@ -1,4 +1,4 @@
-import { SET_NEWS_LIST, SET_NEWS, ADD_NEWS, DELETE_NEWS } from "../actions/types";
+import { SET_NEWS_LIST, SET_NEWS, ADD_NEWS, DELETE_NEWS, SET_COMMENT, DELETE_COMMENT } from "../actions/types";
 const initialState = {
     newsList: null,
     news: null
@@ -9,10 +9,7 @@ export default function (state = initialState, action) {
         //set newslist state with list of news
         case SET_NEWS_LIST:
             let newsList = action.payload;
-            const listItem = newsList.map(news => {
-                const item = { ...news.news, comments: news.comments, user: news.user };
-                return item;
-            });
+            const listItem = newsList.map(news => ({ ...news.news, comments: news.comments, user: news.user }));
             return {
                 ...state,
                 newsList: listItem
@@ -36,6 +33,21 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 newsList: state.newsList.filter(news => news.id !== action.payload)
+            }
+        case SET_COMMENT:
+            let comments = [action.payload, ...state.news.news.comments];
+            news['news']['comments'] = comments;
+            return {
+                ...state,
+                news
+            }
+        //delete comment
+        case DELETE_COMMENT:
+            comments = state.news.comments.filter(comment => comment.id !== action.payload)
+            news['comments'] = comments
+            return {
+                ...state,
+                news
             }
         //return the initial state on default case
         default:

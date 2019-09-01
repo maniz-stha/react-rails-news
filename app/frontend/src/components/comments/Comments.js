@@ -1,26 +1,32 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { getNews } from '../../actions/newsAction';
+import { addComment } from '../../actions/commentAction';
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup';
+import HiddenInput from '../common/HiddenInput';
 import CommentItem from './CommentItem';
 
 class Comments extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: '',
+            user_id: '',
             title: '',
             link: '',
             source: '',
-            id: '',
             comment: '',
             comments: {},
             user: {},
-            updated_at: ''
+            updated_at: '',
+            errors: {},
+            news: {}
         };
+        this.onChange = this.onChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
     componentDidMount() {
         const newsId = this.props.match.params.id;
@@ -28,23 +34,38 @@ class Comments extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { news, errors } = nextProps;
+        const { news, errors, user } = nextProps;
 
+        if (errors) {
+            this.setState({errors})
+        }
         if (nextProps.news) {
             this.setState({
+                id: news.id,
+                user_id: user.id,
                 title: news.title,
                 link: news.link,
                 source: news.source,
-                id: news.id,
                 comments: news.comments,
                 user: news.user,
-                updated_at: news.updated_at
+                updated_at: news.updated_at,
+                news
             });
         }
     }
 
     onChange(event) {
         this.setState({ [event.target.name]: event.target.value })
+    }
+
+    onSubmit(event) {
+        event.preventDefault();
+        const commentData = {
+            user_id: this.state.user_id,
+            news_id: this.state.id,
+            comment: this.state.comment
+        };
+        this.props.addComment(commentData);
     }
 
     onLikeClick() {
@@ -54,11 +75,10 @@ class Comments extends Component {
     render() {
         const { errors } = this.props;
         const comments = this.state.comments;
-        console.log('comments', comments)
         let commentsList;
         if (comments && comments.length > 0) {
             commentsList = comments.map(item => (
-                <CommentItem key={item.id} comment={item}/>
+                <CommentItem key={item.id} comment={item} currentUserId={this.props.user.id}/>
             ));
         } else {
             commentsList = (
@@ -88,15 +108,29 @@ class Comments extends Component {
                 </div>
                 <hr/>
                 <div className="comment-box mt-3">
-                    <TextAreaFieldGroup
-                        placeholder="Give some comment"
-                        name="comment"
-                        value={this.state.comment}
-                        onChange={this.onChange}
-                        error={errors.name}
-                        label="Comment"
-                    />
-                    <button type="submit" className="btn btn-primary btn-sm float-right">Comment</button>
+                    <form onSubmit={this.onSubmit}>
+                        <HiddenInput
+                            name="news_id"
+                            value={this.state.id}
+                            onChange={this.onChange}
+                            error={errors.news_id}
+                        />  
+                        <HiddenInput
+                            name="user_id"
+                            value={this.state.user_id}
+                            onChange={this.onChange}
+                            error={errors.user_id}
+                        />  
+                        <TextAreaFieldGroup
+                            placeholder="Give some comment"
+                            name="comment"
+                            value={this.state.comment}
+                            onChange={this.onChange}
+                            error={errors.comment}
+                            label="Comment"
+                        />
+                        <button type="submit" className="btn btn-primary btn-sm float-right">Comment</button>
+                    </form>
                 </div>
                 <hr/>
                 { commentsList }
@@ -109,7 +143,8 @@ Comments.propTypes = {
     user: PropTypes.object.isRequired,
     news: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired,
-    getNews: PropTypes.func.isRequired
+    getNews: PropTypes.func.isRequired,
+    addComment: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -118,4 +153,4 @@ const mapStateToProps = state => ({
     errors: state.errors
 });
 
-export default connect(mapStateToProps, {getNews})(Comments);
+export default connect(mapStateToProps, {getNews, addComment})(Comments);
