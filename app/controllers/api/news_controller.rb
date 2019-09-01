@@ -16,7 +16,7 @@ class Api::NewsController < ApplicationController
         else
             news_data = []
             @news.each_with_index do |news, index|
-                news_data << {news: news, comments: news.comments.count, likes: news.likes.count, user: news.user.username}
+                news_data << {news: news, comments: news.comments.count, likes: liked_user_id(news), user: news.user.username}
             end
             render json: {status: "SUCCESS", message: "List of news feeds", data: news_data}, status: :ok
         end
@@ -27,7 +27,12 @@ class Api::NewsController < ApplicationController
         if @news.blank?
             render json: {errors: "News item not found."}, status: :not_found
         else
-            news_data = {news: @news, comments: @news.comments, likes: @news.likes.count, user: @news.user}
+            news_data = {
+                news: @news, 
+                comments: @news.comments.as_json(:include => {user: {only: [:username]}}), 
+                likes: liked_user_id(@news), 
+                user: @news.user
+            }
             render json: {status: "SUCCESS", message: "News data for edit", data: news_data}, status: :ok
         end
     end
@@ -74,4 +79,12 @@ class Api::NewsController < ApplicationController
         params.permit(:title, :link, :source)
     end
 
+    #returns id of all user that liked the news
+    def liked_user_id(news)
+        user_ids = []
+        news.likes.each do |like|
+            user_ids << like.user_id
+        end
+        return user_ids
+    end
 end

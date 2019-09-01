@@ -17,7 +17,7 @@ class CommentItem extends Component {
             <div className="comment-item">
                 <ul className="list-group">
                     <li className="list-group-item mb-2">
-                        <span className="comment-user">{comment.user_id}</span>
+                        <span className="comment-user">{comment.user.username}</span> says:&nbsp;
                         <span className="comment-text">{comment.comment}</span>
                         {
                             comment.user_id === currentUserId ? (

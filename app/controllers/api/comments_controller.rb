@@ -20,7 +20,7 @@ class Api::CommentsController < ApplicationController
     def create
         @comment = Comment.new(comment_params)
         if @comment.save
-            render json: {status: "SUCCESS", message: "New comment added", data: @comment}, status: :created
+            render json: {status: "SUCCESS", message: "New comment added", data: @comment.as_json(:include => {user: {only: [:username]}})}, status: :created
         else
            get_errors @comment 
         end
