@@ -9,7 +9,7 @@ export default function (state = initialState, action) {
         //set newslist state with list of news
         case SET_NEWS_LIST:
             let newsList = action.payload;
-            const listItem = newsList.map(news => ({ ...news.news, comments: news.comments, user: news.user }));
+            const listItem = newsList.map(news => ({ ...news.news, comments: news.comments, likes: news.likes, user: news.user }));
             return {
                 ...state,
                 newsList: listItem
@@ -17,7 +17,7 @@ export default function (state = initialState, action) {
         //set single news item
         case SET_NEWS:
            const news = action.payload;
-            const newsItem = { ...news.news, comments: news.comments, user: news.user };
+            const newsItem = { ...news.news, comments: news.comments, likes: news.likes, user: news.user };
             return {
                 ...state,
                 news: newsItem
@@ -36,7 +36,7 @@ export default function (state = initialState, action) {
             }
         case SET_COMMENT:
             let updatedComments = [...state.news.comments, action.payload];
-            const currentNewsItem = { ...state.news, comments: updatedComments, user: state.news.user}
+            const currentNewsItem = { ...state.news, comments: updatedComments, likes: state.news.likes, user: state.news.user}
             return {
                 ...state,
                 news: currentNewsItem
@@ -44,7 +44,7 @@ export default function (state = initialState, action) {
         //delete comment
         case DELETE_COMMENT:
             let comments = state.news.comments.filter(comment => comment.id !== action.payload)
-            const updatedNewsItem = { ...state.news, comments: comments, user: state.news.user}
+            const updatedNewsItem = { ...state.news, comments: comments, likes: state.news.likes, user: state.news.user}
             return {
                 ...state,
                 news: updatedNewsItem

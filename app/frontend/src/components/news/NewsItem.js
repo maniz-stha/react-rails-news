@@ -30,7 +30,9 @@ class NewsItem extends Component {
                 <div className="news-info">
                     <a href="#" className="news-like news-action" onClick={this.onLikeClick.bind(this)}>
                         <i className="fas fa-thumbs-up" />
-                        <span className="badge badge-dark ml-2">1</span>
+                        { news.likes > 0 ? (
+                            <span className="badge badge-dark ml-2">{news.likes}</span>
+                        ) : null}
                     </a>
                     <Link to={`/news/${news.id}/comments`} className="news-comment news-action mx-5">
                         Comment
