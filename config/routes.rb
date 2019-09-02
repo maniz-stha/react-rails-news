@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       resources :comments
       resources :likes, only: [:create, :destroy]
     end
+    get '/news/search/:term', to: 'news#search'
   end
   get '/*a', to: "application#react_index"
 end

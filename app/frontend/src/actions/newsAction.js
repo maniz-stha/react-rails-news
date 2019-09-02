@@ -21,6 +21,29 @@ export const getNewsList = () => dispatch => {
          });
 };
 
+//get filtered news list by term
+export const getFilteredNewsList = (searchTerm) => dispatch => {
+    axios.get(`/api/news/search/${searchTerm}`)
+        .then(res => { 
+            const newsList = res.data;
+            dispatch({
+                type: SET_NEWS_LIST,
+                payload: newsList.data
+            });
+        })
+        .catch(err => {
+            dispatch({
+                type: SET_NEWS_LIST,
+                payload: {}
+            });
+         });
+};
+
+export const submitSearch = (searchTerm, history) => dispatch => {
+    dispatch(getFilteredNewsList(searchTerm));
+    history.push(`/search/${searchTerm}`);
+};
+
 // create news
 export const addNews = (newsData, history) => dispatch => {
     axios.post('/api/news', newsData)
