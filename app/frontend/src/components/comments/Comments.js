@@ -68,7 +68,7 @@ class Comments extends Component {
             comment: this.state.comment
         };
         this.props.addComment(commentData);
-        this.state.comment = '';
+        this.setState({ comment: '' });
     }
 
     // like or dislike the news when like button is clicked
