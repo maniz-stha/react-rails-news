@@ -14,4 +14,5 @@ Rails.application.routes.draw do
       resources :likes, only: [:create, :destroy]
     end
   end
+  get '/*a', to: "application#react_index"
 end
