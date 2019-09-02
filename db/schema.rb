@@ -12,7 +12,10 @@
 
 ActiveRecord::Schema.define(version: 2019_09_01_122310) do
 
-  create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "comments", force: :cascade do |t|
     t.bigint "news_id"
     t.bigint "user_id"
     t.text "comment"
@@ -22,7 +25,7 @@ ActiveRecord::Schema.define(version: 2019_09_01_122310) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "likes", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "likes", force: :cascade do |t|
     t.bigint "news_id"
     t.bigint "user_id"
     t.datetime "created_at", null: false
@@ -31,7 +34,7 @@ ActiveRecord::Schema.define(version: 2019_09_01_122310) do
     t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
-  create_table "news", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "news", force: :cascade do |t|
     t.text "title"
     t.text "link"
     t.string "source"
@@ -41,7 +44,7 @@ ActiveRecord::Schema.define(version: 2019_09_01_122310) do
     t.index ["user_id"], name: "index_news_on_user_id"
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "name"
     t.string "email"
