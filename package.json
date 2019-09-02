@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "News listing app with react and rails",
   "scripts": {
-    "frontend-start": "npm start --prefix app/frontend"
+    "frontend-start": "npm start --prefix app/frontend",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix app/frontend && npm run build --prefix app/frontend"
   },
   "private": true,
   "dependencies": {}
