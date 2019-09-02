@@ -79,7 +79,7 @@ class Api::NewsController < ApplicationController
         .includes(:user, :comments)
         .where("LOWER(title) LIKE ? OR LOWER(source) LIKE ?", search_term, search_term)
         if @news.blank?
-            render json: {status: "FEED_EMPTY", query:query, message: "No news feeds", data: {}}, status: :ok
+            render json: {status: "FEED_EMPTY", message: "No news feeds", data: {}}, status: :ok
         else
             news_data = []
             # format likes, comments and user for each news
