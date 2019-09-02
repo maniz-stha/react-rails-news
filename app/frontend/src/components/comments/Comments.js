@@ -108,12 +108,12 @@ class Comments extends Component {
             );
         }
         return (
-            <div className="card card-body bg-light my-3">
+            <div className="news-list mt-3 px-3 py-2">
                 <div className="news-title">
                     <a className="news-link" href={this.state.link} target="_blank" rel="noopener noreferrer">{this.state.title}</a>
-                    <span className="news-source ml-3">({this.state.source})</span>
+                    <span className="news-source text-muted small ml-3">({this.state.source})</span>
                 </div>
-                <div className="news-info">
+                <div className="news-info small">
                     <a href="#" className="news-like news-action" onClick={this.onLikeClick.bind(this, this.state.news_id, this.state.user_id, isNewsLiked, likeId)}>
                         <i className={classnames('fas fa-thumbs-up', {
                             'text-info': isNewsLiked
@@ -132,8 +132,7 @@ class Comments extends Component {
                         Posted by ({this.state.user.username}) <Moment fromNow>{this.state.updated_at}</Moment>
                     </span>
                 </div>
-                <hr/>
-                <div className="comment-box mt-3">
+                <div className="comment-box mt-3 py-3">
                     <form onSubmit={this.onSubmit}>
                         <HiddenInput
                             name="news_id"
@@ -158,8 +157,9 @@ class Comments extends Component {
                         <button type="submit" className="btn btn-primary btn-sm float-right">Comment</button>
                     </form>
                 </div>
-                <hr/>
-                { commentsList }
+                <div className="comment-list mt-5 pt-3">
+                    {commentsList}
+                </div>
             </div>
         )
     }

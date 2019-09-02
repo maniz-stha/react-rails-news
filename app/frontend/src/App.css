@@ -1,7 +1,15 @@
-nav {
+nav,
+.news-list {
   background-color: #e3f2fd;
 }
-
+.news-item:first-child {
+  border-top: none;
+}
+.news-item,
+.comment-box,
+.comment-list {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
 a.news-action {
   color: #777777;
 }
@@ -9,6 +17,10 @@ a.news-action {
 a.news-action:hover,
 a.news-action.liked {
   color: #007bff;
+}
+
+.comment-box {
+  height: auto;
 }
 
 div.search-group {
