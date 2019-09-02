@@ -16,6 +16,7 @@ import Register from './components/auth/Register';
 import Feeds from './components/news/Feeds';
 import AddNews from './components/news/AddNews';
 import EditNews from './components/news/EditNews';
+import Search from './components/news/Search';
 import Comments from './components/comments/Comments';
 
 //check for auth tokens
@@ -46,6 +47,7 @@ function App() {
             <Route exact path="/(|feeds)/" component={Feeds} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
+            <Route exact path="/search/:term" component={Search} />
             <Switch>
               <PrivateRoute exact path="/news/create" component={AddNews}/>
             </Switch>
