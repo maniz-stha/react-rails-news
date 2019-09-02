@@ -1,6 +1,6 @@
 class Api::NewsController < ApplicationController
     skip_before_action :verify_authenticity_token
-    before_action :authorize_request, except: [:index, :show]
+    before_action :authorize_request, except: [:index, :show, :search]
 
     Page_size = 30
     
@@ -69,6 +69,24 @@ class Api::NewsController < ApplicationController
             else
                 render json: {errors: "Cannot delete post."}, status: :bad_request
             end
+        end
+    end
+
+    #search on news feed by title or source
+    def search
+        search_term = "%#{params[:term].downcase}%"
+        @news = News.order('created_at desc')
+        .includes(:user, :comments)
+        .where("LOWER(title) LIKE ? OR LOWER(source) LIKE ?", search_term, search_term)
+        if @news.blank?
+            render json: {status: "FEED_EMPTY", query:query, message: "No news feeds", data: {}}, status: :ok
+        else
+            news_data = []
+            # format likes, comments and user for each news
+            @news.each do |news|
+                news_data << {news: news, comments: news.comments.count, likes: liked_user_id(news), user: news.user.username}
+            end
+            render json: {status: "SUCCESS", message: "List of news feeds", data: news_data}, status: :ok
         end
     end
 

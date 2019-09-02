@@ -10,3 +10,12 @@ a.news-action:hover,
 a.news-action.liked {
   color: #007bff;
 }
+
+div.search-group {
+  width: 80%;
+  margin: auto;
+}
+.search-form {
+  width: 100%;
+  display: flex;
+}
