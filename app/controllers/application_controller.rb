@@ -1,4 +1,9 @@
 class ApplicationController < ActionController::Base
+
+    def react_index
+      render file: Rails.root.join('public', 'index.html')
+    end
+
     def authorize_request
         header = request.headers['Authorization']
         header = header.split(' ').last if header
@@ -21,5 +26,5 @@ class ApplicationController < ActionController::Base
         errors[attr] = model.errors.full_message(attr, message)
       end
       render status: :bad_request, json: errors
-  end
+   end
 end
