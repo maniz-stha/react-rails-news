@@ -42,12 +42,12 @@ class NewsItem extends Component {
             likeId = Object.keys(news.likes).find(key => news.likes[key] == auth.user.id);
         }
         return (
-            <div className="card card-body bg-light mb-3">
+            <div className="news-item px-3 py-2">
                 <div className="news-title">
                     <a className="news-link" href={news.link} target="_blank" rel="noopener noreferrer">{news.title}</a>
-                    <span className="news-source ml-3">({news.source})</span>
+                    <span className="news-source text-muted small ml-3">({news.source})</span>
                 </div>
-                <div className="news-info">
+                <div className="news-info small">
                     <a href="#" className="news-like news-action" onClick={this.onLikeClick.bind(this, news.id, auth.user.id, isNewsLiked, likeId)}>
                         <i className={classnames('fas fa-thumbs-up', {
                             'text-info': isNewsLiked

@@ -17,17 +17,22 @@ class CommentItem extends Component {
             <div className="comment-item">
                 <ul className="list-group">
                     <li className="list-group-item mb-2">
-                        <span className="comment-user">{comment.user.username}</span> says:&nbsp;
-                        <span className="comment-text">{comment.comment}</span>
-                        {
-                            comment.user_id === currentUserId ? (
-                                <span className="comment-actions float-right">
-                                    <a href="#" onClick={this.onDeleteClick.bind(this, comment.news_id, comment.id)} className="comment-delete news-action">
-                                        <i className="fas fa-times" />
-                                    </a>
-                                </span>
-                            ) : null
-                        }
+                        <div className="comment">
+                            <span className="comment-user">{comment.user.username}</span> says:&nbsp;
+                            <span className="comment-text">{comment.comment}</span>
+                            {
+                                comment.user_id === currentUserId ? (
+                                    <span className="comment-actions float-right">
+                                        <a href="#" onClick={this.onDeleteClick.bind(this, comment.news_id, comment.id)} className="comment-delete news-action">
+                                            <i className="fas fa-times" />
+                                        </a>
+                                    </span>
+                                ) : null
+                            }
+                        </div>
+                        <div className="comment-time small tex-muted">
+                            <Moment fromNow>{comment.updated_at}</Moment>
+                        </div>
                     </li>
                 </ul>
             </div>
