@@ -22,10 +22,12 @@ class Feeds extends Component {
             );
         }
         return (
-            <div className="news-list row">
+            <div className="feeds row">
                 <div className="col-md-12">
-                    <h2 className="text-center">News listings</h2>
-                    {newsItems}
+                    <h2 className="text-center my-3">News listings</h2>
+                    <div className="news-list">
+                        {newsItems}
+                    </div>
                 </div>
             </div>
         )
