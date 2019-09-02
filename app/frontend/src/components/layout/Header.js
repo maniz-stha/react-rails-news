@@ -55,7 +55,6 @@ class Header extends Component {
             {user.name}
           </button>
           <div className="dropdown-menu">
-            <a className="dropdown-item" href="/profile">Profile</a>
             <a className="dropdown-item" href="/news/create">Add news</a>
             <div className="dropdown-divider"></div>
             <a className="dropdown-item" href="#" onClick={this.onLogoutClick.bind(this)}>Logout</a>
